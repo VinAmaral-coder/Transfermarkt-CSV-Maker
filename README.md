@@ -87,6 +87,11 @@ data/database.json
 - [ ] Multiple league support
 - [ ] Automatic updates
 
+## Current Problems
+- No minifaces for all players
+- Problems with separating the topics
+- And more
+
 ## License
 
 This project is intended for educational and personal use.
