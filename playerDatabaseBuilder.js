@@ -1,6 +1,7 @@
-import { get } from "axios";
+import axios from "axios";
 import { load } from "cheerio";
 import { writeFileSync } from "fs";
+import { json2csv } from "json-2-csv";
 import competitions from "./competitions.js";
 
 const BASE = "https://www.transfermarkt.com";
@@ -12,15 +13,14 @@ const headers = {
   "Connection": "keep-alive",
 };
 
-// Delay para evitar bloqueios por excesso de requisições (Importante)
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-
-// CLUBES OU SELEÇÕES
+// CLUBES
 async function getTeams(url) {
-  const { data } = await get(url, { headers });
+  const { data } = await axios.get(url, { headers });
   const $ = load(data);
   const teams = [];
+
   $(".items tbody tr").each((i, el) => {
     const link = $(el).find("td a").attr("href");
     const name = $(el).find("td a").text().trim();
@@ -32,27 +32,34 @@ async function getTeams(url) {
       });
     }
   });
+
   return teams;
 }
 
-// LOGO DO TIMES
+// LOGO DO CLUBE
 async function getTeamLogo(teamUrl) {
   try {
-    const { data } = await get(teamUrl, { headers });
+    const { data } = await axios.get(teamUrl, { headers });
     const $ = load(data);
-    const logo = $(".data-header__profile-container img").attr("src");
-    return logo || "";
-  } catch {
+    const logo =
+      $(".data-header__profile-container img").attr("src") ||
+      $(".data-header__profile-container img").attr("data-src") ||
+      "";
+
+    return logo;
+  } catch (err) {
+    console.error("Erro ao buscar logo:", err.message);
     return "";
   }
 }
 
-// ELENCOS
+// ELENCO
 async function getPlayers(team) {
   const squadUrl = team.url.replace("startseite", "kader");
-  const { data } = await get(squadUrl, { headers });
+  const { data } = await axios.get(squadUrl, { headers });
   const $ = load(data);
   const players = [];
+
   $(".items tbody tr").each((i, el) => {
     const playerLink = $(el).find("td.posrela a").attr("href");
     const name = $(el).find("td.posrela a").text().trim();
@@ -65,26 +72,32 @@ async function getPlayers(team) {
       });
     }
   });
+
   return players;
 }
 
-// DADOS DO JOGADORES
+// DADOS DO JOGADOR
 async function getPlayerData(player) {
   try {
-    const { data } = await get(player.url, { headers });
+    const { data } = await axios.get(player.url, { headers });
     const $ = load(data);
     const nome = $("h1").text().trim();
-    const idade = $(".data-header__content")
-      .text()
-      .match(/(\d+)\s*anos/)?.[1] || "";
+    const idade =
+      $(".data-header__content")
+        .text()
+        .match(/\((\d+)\)/)?.[1] || "";
+
     const valor = $(".data-header__market-value-wrapper")
       .text()
       .trim();
-    const posicao = $(".detail-position__position").text().trim();
+    const posicao = $(".detail-position__position")
+      .text()
+      .trim();
     const id = player.url.match(/spieler\/(\d+)/)?.[1];
     const imagem = id
       ? `https://img.a.transfermarkt.technology/portrait/big/${id}.jpg`
       : "";
+
     return {
       nome,
       idade,
@@ -93,7 +106,12 @@ async function getPlayerData(player) {
       posicao,
       imagem,
     };
-  } catch {
+  } catch (err) {
+    console.error(
+      `Erro ao buscar jogador ${player.name}:`,
+      err.message
+    );
+
     return null;
   }
 }
@@ -101,30 +119,40 @@ async function getPlayerData(player) {
 // MAIN
 (async () => {
   const resultado = [];
-  for (const comp of competitions) {
-    console.log("🏆 Competição:", comp.name);
-    const teams = await getTeams(comp.url);
-    for (const team of teams.slice(0, 3)) {
-      console.log("🏟️ Time:", team.name);
-      const logo = await getTeamLogo(team.url);
-      const players = await getPlayers(team);
-      for (const player of players.slice(0, 8)) {
-        console.log("👤", player.name);
-        const data = await getPlayerData(player);
-        if (data) {
-          resultado.push({
-            ...data,
-            logo,
-            competicao: comp.name,
-          });
-        }
 
-        await delay(800);
+  try {
+    for (const comp of competitions.slice(0, 1)) { // Testes iniciais com os times da Premier League
+      console.log(`🏆 Competição: ${comp.name}`);
+      const teams = await getTeams(comp.url);
+
+      for (const team of teams.slice(0, 3)) { // Testes iniciais com apenas 3 clubes (Arsenal, City e Chealsea)
+        console.log(`🏟️ Time: ${team.name}`);
+        const logo = await getTeamLogo(team.url);
+        const players = await getPlayers(team);
+        for (const player of players.slice(0, 8)) { // Testes iniciais com apenas 8 jogadores (media de 23-24 por time)
+          console.log(`👤 ${player.name}`);
+          const data = await getPlayerData(player);
+          if (data) {
+            resultado.push({
+              ...data,
+              logo,
+              competicao: comp.name,
+            });
+          }
+
+          await delay(800);
+        }
       }
     }
+
+    const csv = await json2csv(resultado);
+
+    writeFileSync("database.csv", csv, "utf8");
+
+    console.log(
+      `✅ Finalizado! ${resultado.length} jogadores salvos em database.csv`
+    );
+  } catch (err) {
+    console.error("❌ Erro geral:", err);
   }
-
-  writeFileSync("database.json", JSON.stringify(resultado, null, 2));
-
-  console.log("Finalizado: database.json");
 })();

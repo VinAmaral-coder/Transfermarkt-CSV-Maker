@@ -81,11 +81,17 @@ data/database.json
 
 ## Future Improvements
 
-- [ ] CSV export support
+- [x] CSV export support
 - [ ] Better error handling
 - [ ] Search filters
 - [ ] Multiple league support
 - [ ] Automatic updates
+- [ ] Separeted topics for clubs and players
+
+## Current Problems
+- No minifaces for all players
+- Problems with separating the topics
+- And more
 
 ## License
 

@@ -1,6 +1,7 @@
 {
   "name": "planilhas-base",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,6 +12,7 @@
   "description": "",
   "dependencies": {
     "axios": "^1.15.2",
-    "cheerio": "^1.2.0"
+    "cheerio": "^1.2.0",
+    "json-2-csv": "^5.5.11"
   }
 }
