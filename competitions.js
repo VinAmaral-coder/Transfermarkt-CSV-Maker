@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   // 🌍 LIGAS
   { name: "Premier League", url: "https://www.transfermarkt.com/premier-league/startseite/wettbewerb/GB1" },
   { name: "La Liga", url: "https://www.transfermarkt.com/laliga/startseite/wettbewerb/ES1" },
