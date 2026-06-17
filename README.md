@@ -81,7 +81,7 @@ data/database.json
 
 ## Future Improvements
 
-- [ ] CSV export support
+- [x] CSV export support
 - [ ] Better error handling
 - [ ] Search filters
 - [ ] Multiple league support
