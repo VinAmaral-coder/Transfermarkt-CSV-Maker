@@ -40,20 +40,6 @@ CSV-Maker/
 └── README.md
 ```
 
-## Installation
-
-Clone the repository:
-
-```bash
-git clone https://github.com/your-user/CSV-Maker.git
-```
-
-Install dependencies:
-
-```bash
-npm install
-```
-
 ## Usage
 
 Run the scraper:
