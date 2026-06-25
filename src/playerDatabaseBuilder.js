@@ -6,7 +6,12 @@ import competitions from "./competitions.js";
 
 const BASE = "https://www.transfermarkt.com";
 
-const headers = {
+/**
+ * Transfermarkt blocks many requests that do not mimic a real browser.
+ * The headers below reproduce a common Chromium browser request.
+ */
+
+const headers = { 
   "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
   "Accept-Language": "en-US,en;q=0.9",
   "Accept-Encoding": "gzip, deflate, br",
@@ -15,15 +20,20 @@ const headers = {
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-// CLUBES
+// CLUBS
 async function getTeams(url) {
   const { data } = await axios.get(url, { headers });
   const $ = load(data);
   const teams = [];
 
   $(".items tbody tr").each((i, el) => {
-    const link = $(el).find("td a").attr("href");
-    const name = $(el).find("td a").text().trim();
+ const link = $(el)
+    .find("td a")
+    .attr("href");
+    const name = $(el)
+    .find("td.hauptlink a")
+    .text()
+    .trim();
 
     if (link && link.includes("/verein/")) {
       teams.push({
@@ -36,7 +46,7 @@ async function getTeams(url) {
   return teams;
 }
 
-// LOGO DO CLUBE
+// TEAMS LOGOS
 async function getTeamLogo(teamUrl) {
   try {
     const { data } = await axios.get(teamUrl, { headers });
@@ -53,7 +63,7 @@ async function getTeamLogo(teamUrl) {
   }
 }
 
-// ELENCO
+// SQUADS
 async function getPlayers(team) {
   const squadUrl = team.url.replace("startseite", "kader");
   const { data } = await axios.get(squadUrl, { headers });
@@ -76,35 +86,45 @@ async function getPlayers(team) {
   return players;
 }
 
-// DADOS DO JOGADOR
+// PLAYERS DATA
 async function getPlayerData(player) {
   try {
     const { data } = await axios.get(player.url, { headers });
     const $ = load(data);
-    const nome = $("h1").text().trim();
+
+  const number = $(".data-header__shirt-number")
+  .text()
+  .trim();
+
+  const hd = $("h1").clone();
+hd.find(".data-header__shirt-number").remove();
+  const nome = hd
+  .text()
+  .trim();
     const idade =
       $(".data-header__content")
         .text()
         .match(/\((\d+)\)/)?.[1] || "";
-
     const valor = $(".data-header__market-value-wrapper")
       .text()
+      .split("Last update:")[0]
       .trim();
-    const posicao = $(".detail-position__position")
-      .text()
-      .trim();
+    const positions = $(".detail-position__position");
+    const posicao = positions.first()
+  .text()
+  .trim();
     const id = player.url.match(/spieler\/(\d+)/)?.[1];
-    const imagem = id
-      ? `https://img.a.transfermarkt.technology/portrait/big/${id}.jpg`
-      : "";
-
+    const imagem =
+    $(".data-header__profile-container img").attr("src")
+    "";
     return {
-      nome,
-      idade,
-      clube: player.team,
-      valor,
-      posicao,
-      imagem,
+      Numero: number,
+      Nome: nome,
+      Idade: idade,
+      Clube: player.team,
+      Valor: valor,
+      Posição: posicao,
+      Imagem: imagem,
     };
   } catch (err) {
     console.error(
@@ -125,18 +145,18 @@ async function getPlayerData(player) {
       console.log(`🏆 Competição: ${comp.name}`);
       const teams = await getTeams(comp.url);
 
-      for (const team of teams.slice(0, 3)) { // Testes iniciais com apenas 3 clubes (Arsenal, City e Chealsea)
+      for (const team of teams.slice(0, 1)) { // Testes iniciais com apenas 1 clubes (City )
         console.log(`🏟️ Time: ${team.name}`);
         const logo = await getTeamLogo(team.url);
         const players = await getPlayers(team);
-        for (const player of players.slice(0, 8)) { // Testes iniciais com apenas 8 jogadores (media de 23-24 por time)
+        for (const player of players.slice(0, 3)) { // Testes iniciais com apenas 3 jogadores (media de 23-24 por time)
           console.log(`👤 ${player.name}`);
           const data = await getPlayerData(player);
           if (data) {
             resultado.push({
               ...data,
-              logo,
-              competicao: comp.name,
+              Logo: logo,
+              Competição: comp.name,
             });
           }
 
@@ -147,7 +167,7 @@ async function getPlayerData(player) {
 
     const csv = await json2csv(resultado);
 
-    writeFileSync("database.csv", csv, "utf8");
+    writeFileSync("data/database.csv", csv, "utf8");
 
     console.log(
       `✅ Finalizado! ${resultado.length} jogadores salvos em database.csv`
