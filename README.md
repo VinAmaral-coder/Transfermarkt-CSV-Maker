@@ -1,3 +1,7 @@
+![Node.js](https://img.shields.io/badge/Node.js-20+-green)
+![Status](https://img.shields.io/badge/status-active-success)
+![License](https://img.shields.io/badge/license-MIT-blue)
+
 # CSV-Maker
 
 A Node.js application that collects football data from Transfermarkt and exports it into structured JSON files, with future support for CSV generation.
