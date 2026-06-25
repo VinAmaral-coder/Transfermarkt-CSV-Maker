@@ -20,7 +20,7 @@ const headers = {
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-// CLUBES
+// CLUBS
 async function getTeams(url) {
   const { data } = await axios.get(url, { headers });
   const $ = load(data);
@@ -46,7 +46,7 @@ async function getTeams(url) {
   return teams;
 }
 
-// LOGO DO CLUBE
+// TEAMS LOGOS
 async function getTeamLogo(teamUrl) {
   try {
     const { data } = await axios.get(teamUrl, { headers });
@@ -63,7 +63,7 @@ async function getTeamLogo(teamUrl) {
   }
 }
 
-// ELENCO
+// SQUADS
 async function getPlayers(team) {
   const squadUrl = team.url.replace("startseite", "kader");
   const { data } = await axios.get(squadUrl, { headers });
@@ -86,7 +86,7 @@ async function getPlayers(team) {
   return players;
 }
 
-// DADOS DO JOGADOR
+// PLAYERS DATA
 async function getPlayerData(player) {
   try {
     const { data } = await axios.get(player.url, { headers });
