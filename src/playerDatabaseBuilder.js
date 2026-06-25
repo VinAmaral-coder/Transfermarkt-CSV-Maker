@@ -145,7 +145,7 @@ hd.find(".data-header__shirt-number").remove();
       console.log(`🏆 Competição: ${comp.name}`);
       const teams = await getTeams(comp.url);
 
-      for (const team of teams.slice(0, 1)) { // Testes iniciais com apenas 1 clubes (City )
+      for (const team of teams.slice(0, 1)) { // Testes iniciais com apenas 1 clubes (City)
         console.log(`🏟️ Time: ${team.name}`);
         const logo = await getTeamLogo(team.url);
         const players = await getPlayers(team);
