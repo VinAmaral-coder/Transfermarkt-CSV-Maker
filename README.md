@@ -30,7 +30,7 @@ The collected data is stored in JSON format and can later be converted into CSV 
 ## Project Structure
 
 ```text
-CSV-Maker/
+Transfermarkt-CSV-Maker/
 │
 ├── src/
 │   ├── transfermarktScraper.js
@@ -55,28 +55,28 @@ node src/transfermarktScraper.js
 The generated data will be saved inside:
 
 ```text
-data/database.json
+data/database.csv
 ```
 
-## Example Output
+## Example Output - CSV and Google Sheets
 
-```json
-{
-  "name": "Vinícius Júnior",
-  "club": "Real Madrid",
-  "nationality": "Brazil",
-  "marketValue": "€170M"
-}
-```
+- CSV:
+<img width="3806" height="444" alt="CSV" src="https://github.com/user-attachments/assets/48131409-28c2-44bf-b03a-1d1101bd77ab" />
+
+
+- Google Sheets:
+  <img width="3806" height="444" alt="Google-Sheets" src="https://github.com/user-attachments/assets/ea2ad859-c163-45a8-83e2-7765bb8d7eaa" />
+
 
 ## Future Improvements
 
 - [x] CSV export support
+- [x] Separeted topics for clubs and players
+- [x] Clubs and Players with images
 - [ ] Better error handling
 - [ ] Search filters
 - [ ] Multiple league support
 - [ ] Automatic updates
-- [x] Separeted topics for clubs and players
 
 ## Current Problems
 - ~~No minifaces for all players~~
