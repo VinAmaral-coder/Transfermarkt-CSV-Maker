@@ -76,10 +76,10 @@ data/database.json
 - [ ] Search filters
 - [ ] Multiple league support
 - [ ] Automatic updates
-- [ ] Separeted topics for clubs and players
+- [x] Separeted topics for clubs and players
 
 ## Current Problems
-- No minifaces for all players
+- ~~No minifaces for all players~~
 - Problems with separating the topics
 - And more
 
