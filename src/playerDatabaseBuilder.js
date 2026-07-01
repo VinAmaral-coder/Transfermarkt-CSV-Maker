@@ -7,8 +7,8 @@ import competitions from "./competitions.js";
 const BASE = "https://www.transfermarkt.com";
 
 /**
- * Transfermarkt blocks many requests that do not mimic a real browser.
- * The headers below reproduce a common Chromium browser request.
+  Transfermarkt blocks many requests that do not mimic a real browser.
+  The headers below reproduce a common Chromium browser request.
  */
 
 const headers = { 
@@ -20,7 +20,7 @@ const headers = {
 
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
-// CLUBS
+// CLUBES
 async function getTeams(url) {
   const { data } = await axios.get(url, { headers });
   const $ = load(data);
@@ -46,7 +46,7 @@ async function getTeams(url) {
   return teams;
 }
 
-// TEAMS LOGOS
+// LOGO DO CLUBE
 async function getTeamLogo(teamUrl) {
   try {
     const { data } = await axios.get(teamUrl, { headers });
@@ -63,7 +63,7 @@ async function getTeamLogo(teamUrl) {
   }
 }
 
-// SQUADS
+// ELENCO
 async function getPlayers(team) {
   const squadUrl = team.url.replace("startseite", "kader");
   const { data } = await axios.get(squadUrl, { headers });
@@ -86,7 +86,7 @@ async function getPlayers(team) {
   return players;
 }
 
-// PLAYERS DATA
+// DADOS DO JOGADOR
 async function getPlayerData(player) {
   try {
     const { data } = await axios.get(player.url, { headers });
@@ -145,11 +145,11 @@ hd.find(".data-header__shirt-number").remove();
       console.log(`🏆 Competição: ${comp.name}`);
       const teams = await getTeams(comp.url);
 
-      for (const team of teams.slice(0, 1)) { // Testes iniciais com apenas 1 clubes (City)
+      for (const team of teams) { // Testes iniciais com apenas 1 clubes da Premier League
         console.log(`🏟️ Time: ${team.name}`);
         const logo = await getTeamLogo(team.url);
         const players = await getPlayers(team);
-        for (const player of players.slice(0, 3)) { // Testes iniciais com apenas 3 jogadores (media de 23-24 por time)
+        for (const player of players) { // Testes iniciais apenas com jogadores da Premier League
           console.log(`👤 ${player.name}`);
           const data = await getPlayerData(player);
           if (data) {
