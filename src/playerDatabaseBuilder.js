@@ -144,14 +144,33 @@ async function getPlayerData(player) {
       $(".data-header__profile-container img").attr("data-src") ||
       "";
 
-    return {
+  function getInfo(label) {
+      return $("li")
+    .filter((i, el) =>
+      $(el).text().includes(label)
+    )
+    .text();
+}
+  const birth = getInfo("Date of birth/Age:");
+  const playerBirth = birth.match(/\d{2}\/\d{2}\/\d{4}/)?.[0] || "";
+
+  return {
+    // Indentificação do jogador
       Numero: number,
       Nome: nome,
+
+    // Dados do jogador  
       Idade: idade,
+      Nascimento: playerBirth,
+
+    //Dados futebolísticos
       Clube: player.team,
-      Valor: valor,
       Posição: posicao,
+      Valor: valor,
+    
+    //Recursos do jogador
       Face: imagem,
+
     };
   } catch (err) {
     console.error(
@@ -176,14 +195,14 @@ async function getPlayerData(player) {
 
       const teams = await getTeams(comp.url);
 
-      for (const team of teams) {
+      for (const team of teams.slice(0, 1)) {
         console.log(`🏟️ Time: ${team.name}`);
 
         const logo = await getTeamLogo(team.url);
 
         const players = await getPlayers(team);
 
-        for (const player of players) {
+        for (const player of players.slice(0, 3)) {
           console.log(`👤 ${player.name}`);
 
           const data = await getPlayerData(player);
@@ -196,7 +215,7 @@ async function getPlayerData(player) {
             });
           }
 
-          await delay(800);
+          await delay(500);
         }
       }
     }
