@@ -71,7 +71,6 @@ data/database.csv
 ## Future Improvements
 
 - [x] CSV export support
-- [x] Separeted topics for clubs and players
 - [x] Clubs and Players with images
 - [ ] Better error handling
 - [ ] Search filters
@@ -79,10 +78,12 @@ data/database.csv
 - [ ] Automatic updates
 
 ## Current Problems
-- ~~No minifaces for all players~~
-- Problems with separating the topics
-- And more
+- Better layout
+- Players and Teams on separeted topics
+- Competitions names and logos
+- National teams with logos
 
+  
 ## License
 
 This project is intended for educational and personal use.
