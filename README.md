@@ -66,6 +66,7 @@ data/database.csv
 
 - Google Sheets:
   <img width="3806" height="444" alt="Google-Sheets" src="https://github.com/user-attachments/assets/ea2ad859-c163-45a8-83e2-7765bb8d7eaa" />
+  viewer only google sheets (https://docs.google.com/spreadsheets/d/1Ick9nfJXyTvEsbLngM54JQs2Q_-srTrmhzP-FHTizEY/edit?usp=sharing)
 
 
 ## Future Improvements
