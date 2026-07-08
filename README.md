@@ -70,7 +70,7 @@ data/database.csv
 
 ## Future Improvements
 
-- [x] CSV export support
+- [x] CSV export support.
 - [x] Clubs and Players with images
 - [ ] Better error handling
 - [ ] Search filters
