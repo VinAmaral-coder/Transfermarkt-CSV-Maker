@@ -195,14 +195,14 @@ async function getPlayerData(player) {
 
       const teams = await getTeams(comp.url);
 
-      for (const team of teams.slice(0, 1)) {
+      for (const team of teams) {
         console.log(`🏟️ Time: ${team.name}`);
 
         const logo = await getTeamLogo(team.url);
 
         const players = await getPlayers(team);
 
-        for (const player of players.slice(0, 3)) {
+        for (const player of players) {
           console.log(`👤 ${player.name}`);
 
           const data = await getPlayerData(player);
@@ -231,3 +231,5 @@ async function getPlayerData(player) {
     console.error("❌ Erro geral:", err);
   }
 })();
+
+console.timeEnd("Execution Time")
